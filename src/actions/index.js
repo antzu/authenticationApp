@@ -39,7 +39,11 @@ export function signupUser({ email, password }) {
 			localStorage.setItem('token', response.data.token);
 			browserHistory.push('/feature');
 		})
-		.catch(response => dispatch(authError(response.data.error)));
+		.catch(response => {
+			dispatch(authError(response.data.error));
+			console.log(response);
+		});
+
 
 	};
 }
@@ -57,4 +61,18 @@ export function signoutUser(){
 
 	return { type: UNAUTH_USER };
 
+}
+
+export function fetchMessage() {
+	return function(dispatch) {
+		axios.get(ROOT_URL, {
+			headers: { authorization: localStorage.getItem('token') }
+		})
+		.then(response => {
+			dispatch({
+				type: FETCH_MESSAGE,
+				payload: response.data.message
+			})
+		});
+	}
 }
