@@ -9,6 +9,7 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
     <label htmlFor={input.name}>{label}</label>
     <input className="form-control" {...input} type={type}/>
     { touched && error && <span className="text-danger">{error}</span> }
+
   </fieldset>
 )
 
@@ -19,6 +20,17 @@ class Signup extends Component {
     this.props.signupUser({ email, password })
   }
 
+ // THIS alert not working ?!!?!?!?!
+ renderAlert() {
+    if (this.props.errorMessage) {
+      return (
+        <div className="alert alert-danger">
+          <strong>Oops!</strong> {this.props.errorMessage} 
+        </div>
+      );
+    }
+  }
+
   render() {
     const { handleSubmit } = this.props;
 
@@ -27,6 +39,7 @@ class Signup extends Component {
         <Field name="email" component={renderField} type="email" label="Email"/>
         <Field name="password" component={renderField} type="password" label="Password"/>
         <Field name="password_confirmation" component={renderField} type="password" label="Password Confirmation"/>
+        {this.renderAlert()}
         <button type="submit" className="btn btn-primary">Sign Up</button>
       </form>
     );
@@ -54,9 +67,7 @@ function validate(values) {
 }
 
 function mapStateToProps(state) {
-  return {
-    errorMessage: state.auth.error
-  }
+  return { errorMessage: state.auth.error };
 }
 
 export default connect(mapStateToProps, actions)(reduxForm({
